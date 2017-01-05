@@ -2,13 +2,15 @@
 
 $location = '/dashboard/buyers';
 
+// Get the static page with the location
 if(isset($staticPages[$location])) {
 	$entity = $staticPages[$location];
-}
+} // endif
 
+// If no static page found
 if(empty($entity)) {
 	return $app->notFound();
-}
+} // endif
 
 if(empty($user)) {
 
@@ -16,10 +18,10 @@ if(empty($user)) {
 
 } else {
 
-	// Get the chain
+	// Get the buyers
 	$allBuyers = $users->find()->where('user_type', 3)->where('owned_by', $user->id)->orderBy('first_name', 'asc');
 
-	// If searching an estate agent
+	// If searching a buyers name / email
 	if(isset($searchQuery)) {
 		if($searchQuery != 'none') {
 			$allBuyers = $allBuyers->search($searchQuery);
@@ -32,6 +34,7 @@ if(empty($user)) {
 
 } // endif
 
+// When the form is submitted
 if($request->method() == 'POST') {
 
 	$values = $request->toArray();
@@ -47,6 +50,7 @@ if($request->method() == 'POST') {
 
 $entity->breadcrumb = breadcrumb($pages, $entity);
 
+// Pass the variables to the template
 return $template('dashboard/buyers', array(
 	'entity' => $entity,
 	'allBuyers' => $allBuyers,
